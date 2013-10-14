@@ -1,0 +1,32 @@
+<html>
+<head>
+	<title>Silex Chat</title>
+	<link rel="stylesheet" type="text/css" href="{{url}}{{assets}}/bootstrap/css/bootstrap.css">
+	<script type="text/javascript" src="{{url}}{{assets}}/js/jquery-2.0.2.min.js"></script>
+	<script type="text/javascript" src="{{url}}{{assets}}/js/socket.io.js"></script>
+</head>
+<body>
+	<div class="container">
+		<div id="discussion-box"></div>
+		<div id="message-form">
+			Username: <input type="text" name="user" id="username_input"><br>
+			Message: <input type="text" name="message" id="message_input"><br>
+			<input type="submit" id="get1" class="btn">
+		</div>
+	</div>
+	<script type="text/javascript">
+		$('#get1').click(function() {
+			var result = $.post("{{url}}{{app_path}}",
+				{ 
+					'message': $('#message_input').val(),
+					'user': $('#username_input').val()
+				}
+			);
+		});
+		var socket = io.connect('{{socket_address}}');
+		socket.on('new_message', function(data){
+			$('#discussion-box').append('<p>User:' + data.user + "Message:" + data.message + "</p>");
+		});
+	</script>
+</body>
+</html>
